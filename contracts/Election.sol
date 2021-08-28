@@ -64,8 +64,5 @@ contract Election {
 
     emit voted(candidateId);
   }
-
-
-
-
+  
 }

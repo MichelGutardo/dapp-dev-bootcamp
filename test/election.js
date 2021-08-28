@@ -21,4 +21,22 @@ contract("Election", function(accounts) {
         });
     });
 
-})
+    it("check init value for each candidate", function() {
+        return Election.deployed().then(function(instance) {
+            electionInstance = instance;
+            return electionInstance.candidates(1);
+
+        }).then(function(candidate) {
+            assert.equal(candidate[0], 1, "check id");
+            assert.equal(candidate[1], "candidate 1", "check name");
+            assert.equal(candidate[2], 0, "check vote count");
+            return electionInstance.candidates(2);
+
+        }).then(function(candidate) {
+            assert.equal(candidate[0], 2, "check id");
+            assert.equal(candidate[1], "candidate 2", "check name");
+            assert.equal(candidate[2], 0, "check vote count");
+        });
+    });
+
+});
