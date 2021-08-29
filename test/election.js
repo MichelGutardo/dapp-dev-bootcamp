@@ -39,4 +39,25 @@ contract("Election", function(accounts) {
         });
     });
 
+    it("candidate id should smaller or equal to candidate count", function() {
+        return Election.deployed().then(function(instance) {
+            return instance.vote(3, { from: accounts[0] });
+        }).then(assert.fail).catch(function(error) {
+            // console.log
+            assert(error.message.indexOf("revert") >= 0, "error should contain revert");
+        });
+    });
+
+    it("voter should not vote before", function() {
+        return Election.deployed().then(function(instance) {
+            instance.vote(1, { from: accounts[0] });
+            return instance.vote(1, { from: accounts[0] });
+        }).then(assert.fail).catch(function(error) {
+            assert(error.message.indexOf("revert") >= 0, "error should contain revert");
+        });
+    });
+
+
+
+
 });
