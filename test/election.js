@@ -58,6 +58,18 @@ contract("Election", function(accounts) {
     });
 
 
+    it("check valide vote", function() {
+        return Election.deployed().then(function(instance) {
+            electionInstance = instance;
+            electionInstance.vote(2, { from: accounts[1] });
+            return electionInstance.voters(accounts[1]);
+        }).then(function(state) {
+            assert.equal(state, true, "check state after vote");
+            return electionInstance.candidates(2)
+        }).then(function(candidate) {
+            assert.equal(candidate[2], 1, "check vote count")
+        });
+    });
 
 
 });
