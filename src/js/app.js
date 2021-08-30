@@ -25,6 +25,18 @@ App = {
         });
     },
 
+    listemForEvents: function() {
+        App.contracts.Election.deployed().then(function(instance) {
+            instance.voted({}, {
+                fromBlock: "latest",
+                toBlock: "latest"
+            }).watch(function(error, event) {
+                console.log("event trigger", event);
+                App.render();
+            });
+        });
+    },
+
     render: function() {
 
         web3.eth.getCoinbase(function(error, account) {
@@ -61,6 +73,24 @@ App = {
                     candidateSelect.append(candidateOption);
                 })
             }
+            return electionInstance.voters(App.account);
+        }).then(function(voted) {
+            if (voted) {
+                $("form").hide();
+            }
+        })
+    },
+
+    vote: function() {
+        var candidateId = $("#candidateSelect").val();
+        App.contracts.Election.deployed().then(function(instance) {
+            return instance.vote(candidateId, { from: App.account });
+        }).then(function(result) {
+            console.log("after vote");
+            console.log(result);
+
+        }).catch(function(error) {
+            console.log(error);
         });
     }
 };
